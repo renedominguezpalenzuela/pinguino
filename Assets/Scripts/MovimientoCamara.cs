@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class MovimientoCamara : MonoBehaviour
 {
@@ -11,7 +13,8 @@ public class MovimientoCamara : MonoBehaviour
 
     public Camera cam;
     public Transform target;
-    public float distanceToTarget = 10;
+    public float distanceToTarget = 16.5f;
+    public TextMeshProUGUI textoDebug;
     
     private Vector3 previousPosition;
     
@@ -20,11 +23,15 @@ public class MovimientoCamara : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             previousPosition = cam.ScreenToViewportPoint(Input.mousePosition);
+            textoDebug.text = "Iniciando movimiento de Camara SWIPE";
+
         }
         else if (Input.GetMouseButton(0))
         {
             Vector3 newPosition = cam.ScreenToViewportPoint(Input.mousePosition);
             Vector3 direction = previousPosition - newPosition;
+              textoDebug.text = "Continuando movimiento de Camara SWIPE";
+
 
             
             

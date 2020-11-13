@@ -19,8 +19,16 @@ public class GestorEscenasGlobal : MonoBehaviour
     //----------------------------------------------------------------- 
 
     private void Awake(){
-        Instance = this;
+        //Instance = this;
           
+          if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            DestroyImmediate(this.gameObject);
+        }
         Load("00_Splash");
         // GestorEscenasGlobal.Instance.Load ("SampleScene");
     }
