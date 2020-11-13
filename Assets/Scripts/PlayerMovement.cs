@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+
+
     //Asignar este script al objeto que tiene el Character controller
     CharacterController controller;
     public GameObject malla_pinguino; //Asignar la malla del pinguino
@@ -19,17 +21,22 @@ public class PlayerMovement : MonoBehaviour
 
     //Gravedad
     Vector3 playerDirectionVector;
-    float gravity = -10 * 9.81f;
-    float JumpSpeed = 3f;
+    float gravity = -10 * 9.81f * 2; //Gravedad
+    float JumpSpeed = 3f; //Altura del salto
 
     int clickedAmount = 0; //Comprobar si simple o doble clic?
 
     //Camara
     public Camera cam;//Asignar camara
 
+    //Animator_Controller
+    Animator animatorController ;
+
     void Start()
     {
+
         controller = GetComponent<CharacterController>();       
+        animatorController = malla_pinguino.GetComponent<Animator>();
     }
 
 
@@ -74,9 +81,9 @@ public class PlayerMovement : MonoBehaviour
 
  
         //Gravedad
-        playerDirectionVector.y += gravity * Time.deltaTime;
+        playerDirectionVector.y += gravity* Time.deltaTime;
         controller.Move (playerDirectionVector*Time.deltaTime);    
-
+        
         
     }
 
@@ -84,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
 
 void Saltar() {
 
+     animatorController.SetTrigger("Saltar");
      playerDirectionVector.y += Mathf.Sqrt(jumpHeight * -JumpSpeed * gravity); 
 }
 
