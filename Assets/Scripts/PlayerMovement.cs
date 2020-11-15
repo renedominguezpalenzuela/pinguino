@@ -23,14 +23,21 @@ public class PlayerMovement : MonoBehaviour{
     
 
 //Salto
-    float jumpHeight = 20f; //Altura minima para saltar un cubo
-
+    
     //Gravedad
     Vector3 playerMovementVector;
     //float gravity = -10 * 9.81f * 2; //Gravedad
+    [SerializeField]
     float gravity = - 9.81f; //Gravedad
-    float JumpSpeed = 25f; //Velocidad de movimientos, adicionar para que sean mas rapidos
-    float GravitySpeed = 23f;
+
+    [SerializeField]
+    float jumpHeight = 50f; //Altura minima para saltar un cubo
+
+      [SerializeField]
+     float directionalJump = 3f;
+
+
+   
 
     int clickedAmount = 0; //Comprobar si simple o doble clic?
 
@@ -74,9 +81,16 @@ public class PlayerMovement : MonoBehaviour{
 
  
         //Gravedad
-        playerMovementVector.y += gravity* GravitySpeed * Time.deltaTime;
+       // playerMovementVector.y += gravity* GravitySpeed * Time.deltaTime;
+        playerMovementVector.y += gravity;// * Time.deltaTime;
         controller.Move (playerMovementVector*Time.deltaTime);    
         
+//hacer que el pinguino siempre mire la camara
+Vector3 back = cam.transform.position;
+back.y = 0;
+//transform.rotation = Quaternion.LookRotation(fwd);
+
+        malla_pinguino.transform.rotation =  Quaternion.LookRotation(back);
         
     }
 
@@ -85,7 +99,9 @@ public class PlayerMovement : MonoBehaviour{
 void Saltar() {
      animatorController.SetTrigger("Saltar");
      //playerMovementVector.y += Mathf.Sqrt(jumpHeight * -JumpSpeed * gravity); 
-     playerMovementVector.y += Mathf.Sqrt(jumpHeight * JumpSpeed); 
+     //playerMovementVector.y += Mathf.Sqrt(jumpHeight * JumpSpeed); 
+    // playerMovementVector.y += Mathf.Sqrt(jumpHeight*-gravity); 
+     playerMovementVector.y += jumpHeight; 
 }
 
  void MyMouseFunction()    {
@@ -110,10 +126,14 @@ void Saltar() {
                         newPos =  hitInfo.point;
                         
                         //Vector direccion del salto hacia el cubo
-                        float delta = 2f;
+                       
+
+
                         playerMovementVector.x = newPos.x- transform.position.x ;
                         playerMovementVector.z = newPos.z - transform.position.z ;
-                        playerMovementVector = playerMovementVector * delta;
+
+                      //  playerMovementVector = transform.TransformDirection(playerMovementVector);
+                        playerMovementVector = playerMovementVector * directionalJump;
 
                         //Saltar hacia el cubo
                        // Debug.DrawLine(newPos, transform.position, Color.blue, 3f);
@@ -132,10 +152,11 @@ void Saltar() {
                         //newPos =  hitInfo.point;
                         
                         //Vector direccion del salto hacia el cubo
-                        float delta = 2f;
+                        
                         playerMovementVector.x = newPos.x- transform.position.x ;
                         playerMovementVector.z = newPos.z - transform.position.z ;
-                        playerMovementVector = playerMovementVector * delta;
+                      //  playerMovementVector = transform.TransformDirection(playerMovementVector);
+                        playerMovementVector = playerMovementVector * directionalJump;
 
                         //Saltar hacia el cubo
                        // Debug.DrawLine(newPos, transform.position, Color.blue, 3f);

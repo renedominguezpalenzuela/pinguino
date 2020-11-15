@@ -1458,6 +1458,9 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+  gravity: -9.81
+  jumpHeight: 50
+  directionalJump: 3
   cam: {fileID: 963194227}
 --- !u!1 &1580164850
 GameObject:
