@@ -17,6 +17,13 @@ public class MovimientoCamara : MonoBehaviour
     public TextMeshProUGUI textoDebug;
     
     private Vector3 previousPosition;
+    private float rotationAroundXAxis = 0f;
+    private float rotationAroundYAxis = 0f;
+    private float anguloCamara;
+
+
+     float minRotation = -5;
+     float maxRotation = 35;
     
     void Update()
     {
@@ -30,23 +37,62 @@ public class MovimientoCamara : MonoBehaviour
         {
             Vector3 newPosition = cam.ScreenToViewportPoint(Input.mousePosition);
             Vector3 direction = previousPosition - newPosition;
-              textoDebug.text = "Continuando movimiento de Camara SWIPE";
+                     
+           
+            rotationAroundYAxis = -direction.x * 180; // camera moves horizontally                  
+            rotationAroundXAxis = direction.y * 180; // camera moves vertically
 
+            
+           
+
+           
+             
+              textoDebug.text = "Angulo Camara "+newPosition;
+
+                          
+              
+              
+            
+              cam.transform.position = target.position;
+
+              cam.transform.Rotate(new Vector3(1, 0, 0), rotationAroundXAxis);                                                             
+              cam.transform.Rotate(new Vector3(0, 1, 0), rotationAroundYAxis, Space.World); // <— This is what makes it work!
+              cam.transform.Translate(new Vector3(0, 0, -distanceToTarget));
+              previousPosition = newPosition;
+            
 
             
+          
+
+           
             
-            float rotationAroundYAxis = -direction.x * 180; // camera moves horizontally
-            float rotationAroundXAxis = direction.y * 180; // camera moves vertically
-            
-            cam.transform.position = target.position;
-            
-            cam.transform.Rotate(new Vector3(1, 0, 0), rotationAroundXAxis);
-            cam.transform.Rotate(new Vector3(0, 1, 0), rotationAroundYAxis, Space.World); // <— This is what makes it work!
-            
-            cam.transform.Translate(new Vector3(0, 0, -distanceToTarget));
-            
-            previousPosition = newPosition;
+           
         }
+
+ 
     }
+
+        
+
+
+  public static float ConvertToAngle180(float input)
+     {       
+         while (input > 360)
+         {
+             input = input - 360;
+         } 
+         while (input < -360)
+         {
+             input = input + 360;
+         }
+         if (input > 180)
+         {
+             input = input - 360;        
+         }
+         if (input < -180)
+             input = 360+ input;
+         return input;
+     }
+   
 
 }
