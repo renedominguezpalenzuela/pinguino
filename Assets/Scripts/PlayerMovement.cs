@@ -2,7 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//[RequireComponent(typeof(ARSessionOrigin))]
 public class PlayerMovement : MonoBehaviour{
+
+    //Variables globales del pinguino
+    public PinguinoDefinicion pinguino;
+
 
     //Asignar este script al objeto que tiene el Character controller
     CharacterController controller;
@@ -10,97 +16,86 @@ public class PlayerMovement : MonoBehaviour{
     //Animator_Controller
     Animator animatorController ;
 
-
     public GameObject malla_pinguino; //Asignar la malla del pinguino
 
     //Ground Check
-    public Transform groundCheck; //Asignar objeto creado en la base del player, por debajo de la capsula del Character controller
+    //public Transform groundCheck; //Asignar objeto creado en la base del player, por debajo de la capsula del Character controller
     bool isGrounded; //Variable para verificar si esta en el piso o no
-    public float groundDistance = 0.1f; //radio de la esfera para chequear piso si es muy chica, se mueve solo ejemplo 0.02
-                                        // si es muy grande se queda atascado en el borde de los cubos ejemplo 0.2
-    public LayerMask groundMask; //Asignar layer del piso (previamente crear Layer y asignarle al piso)
+    public GameObject jugadorController; 
 
+    //public float groundDistance = 0.1f; //radio de la esfera para chequear piso si es muy chica, se mueve solo ejemplo 0.02
+                                        // si es muy grande se queda atascado en el borde de los cubos ejemplo 0.2
+    //public LayerMask groundMask; //Asignar layer del piso (previamente crear Layer y asignarle al piso)
     
+    //public GameObject isGroundedScriptObject; //Asignar el propio objeto, buscar en internet como referenciar al propio objeto
 
 //Salto
     
     //Gravedad
     Vector3 playerMovementVector;
-    //float gravity = -10 * 9.81f * 2; //Gravedad
+    
     [SerializeField]
-    float gravity = - 9.81f; //Gravedad
+    float gravity = - 9.81f; // - 3 Gravedad
 
     [SerializeField]
-    float jumpHeight = 50f; //Altura minima para saltar un cubo
+    float jumpHeight = 50f; // 50 Altura minima para saltar un cubo
 
-      [SerializeField]
-     float directionalJump = 3f;
-
-
-   
+    [SerializeField]
+    float directionalJump = 3f; //3
 
     int clickedAmount = 0; //Comprobar si simple o doble clic?
 
     //Camara
-    public Camera cam;//Asignar camara
-
-  
+    public Camera cam;//Asignar camara 
 
     void Start()    {
         controller = GetComponent<CharacterController>();       
-        animatorController = malla_pinguino.GetComponent<Animator>();
+        animatorController = malla_pinguino.GetComponent<Animator>(); 
+        //Inicializando vector
+        // playerMovementVector = Vector3.zero;      
     }
-
 
     void Update()    {
         //Chequeando si esta groundded (Crear Esfera centrada en objeto groundCheck y de radio groundDistance
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+       // isGrounded =  isGroundedScriptObject.GetComponent<IsGroundedControlador>().isGrounded;
+       isGrounded = pinguino.isGrounded; 
 
-
-        if (isGrounded && playerMovementVector.y < 0)
-        {
+        if (isGrounded && playerMovementVector.y < 0) {
             playerMovementVector.y = 0f; //Sobra
             playerMovementVector = Vector3.zero;          
         }
      
         //Salto con barra espaciadora (Eliminar)
         if (Input.GetButtonDown("Jump") && isGrounded) {
-            //playerMovementVector.y = jumpHeigth;  
+  
              Saltar();      
         }
 
       
         //Compruebo si se hizo clic en la pantalla
-        if (Input.GetMouseButtonDown(0))
-        {
+        if (Input.GetMouseButtonDown(0))  {
             clickedAmount += 1;
-            MyMouseFunction();
-            //Comprobar si el salto es muy alto
-            //if (playerMovementVector.y >= jumpHeight) {playerMovementVector.y = jumpHeight;} 
+            MyMouseFunction();       
         }
 
  
         //Gravedad
-       // playerMovementVector.y += gravity* GravitySpeed * Time.deltaTime;
+  
         playerMovementVector.y += gravity;// * Time.deltaTime;
         controller.Move (playerMovementVector*Time.deltaTime);    
         
-//hacer que el pinguino siempre mire la camara
-Vector3 back = cam.transform.position;
-back.y = 0;
-//transform.rotation = Quaternion.LookRotation(fwd);
-
-        malla_pinguino.transform.rotation =  Quaternion.LookRotation(back);
-        
+        //hacer que el pinguino siempre mire la camara
+        Vector3 back = cam.transform.position;
+        back.y = 0;
+        malla_pinguino.transform.rotation =  Quaternion.LookRotation(back);    
     }
 
 
 
 void Saltar() {
+    pinguino.estaSaltando = true;
      animatorController.SetTrigger("Saltar");
-     //playerMovementVector.y += Mathf.Sqrt(jumpHeight * -JumpSpeed * gravity); 
-     //playerMovementVector.y += Mathf.Sqrt(jumpHeight * JumpSpeed); 
-    // playerMovementVector.y += Mathf.Sqrt(jumpHeight*-gravity); 
      playerMovementVector.y += jumpHeight; 
 }
 
@@ -120,19 +115,15 @@ void Saltar() {
                 if (DatosObjeto != null) {
                     Vector3 newPos = Vector3.zero;
 
-
                     if (DatosObjeto.name == "piso") {
                          //Obtener punto exacto donde hizo clic
                         newPos =  hitInfo.point;
                         
                         //Vector direccion del salto hacia el cubo
-                       
-
 
                         playerMovementVector.x = newPos.x- transform.position.x ;
                         playerMovementVector.z = newPos.z - transform.position.z ;
 
-                      //  playerMovementVector = transform.TransformDirection(playerMovementVector);
                         playerMovementVector = playerMovementVector * directionalJump;
 
                         //Saltar hacia el cubo
@@ -140,22 +131,20 @@ void Saltar() {
 
                         if (isGrounded) {Saltar();}  
                         
-                    } 
-                    else if (DatosObjeto.name == "Pinguino_Controllador") {
+                    }  else if (DatosObjeto.name == "Pinguino_Controllador") {
                          //Saltar en el lugar
                          if (isGrounded) {Saltar();}                        
-                    } else  { //poner condicion que sea un cubo
+                    }  else  { //poner condicion que sea un cubo
                          //Obtener posicion del centro superior del cubo
                         Vector3 CentroSuperiorCubo =DatosObjeto.transform.position +  DatosObjeto.transform.up * DatosObjeto.transform.lossyScale.y / 2f;
                         newPos = CentroSuperiorCubo;
                         //Obtener punto exacto donde hizo clic
-                        //newPos =  hitInfo.point;
-                        
+                                               
                         //Vector direccion del salto hacia el cubo
                         
                         playerMovementVector.x = newPos.x- transform.position.x ;
                         playerMovementVector.z = newPos.z - transform.position.z ;
-                      //  playerMovementVector = transform.TransformDirection(playerMovementVector);
+                  
                         playerMovementVector = playerMovementVector * directionalJump;
 
                         //Saltar hacia el cubo
@@ -164,8 +153,8 @@ void Saltar() {
                         if (isGrounded) {Saltar();}                        
                     }   
 
-                     Debug.Log("Clic on " + DatosObjeto.name);        
-                     Debug.Log("Clic on Pos " + newPos);
+                    // Debug.Log("Clic on " + DatosObjeto.name);        
+                    // Debug.Log("Clic on Pos " + newPos);
                 }
             }
         }

@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 1552854549614735778}
   - component: {fileID: 3632205556656260456}
   - component: {fileID: 2685729486648193660}
+  - component: {fileID: 5864168597441160973}
   m_Layer: 8
   m_Name: cubo_hielo
-  m_TagString: Untagged
+  m_TagString: CUBO
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -93,3 +94,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5864168597441160973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2983867598696735933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97fc1463d353cbb4cb5f6039eca68ac3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vidaRestante: 10

@@ -22,8 +22,8 @@ public class MovimientoCamara : MonoBehaviour
     private float anguloCamara;
 
 
-     float minRotation = -5;
-     float maxRotation = 35;
+    // float minRotation = -5;
+    // float maxRotation = 35;
     
     void Update()
     {
