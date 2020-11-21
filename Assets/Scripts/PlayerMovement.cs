@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.UI;
+using TMPro;
+
 
 //[RequireComponent(typeof(ARSessionOrigin))]
 public class PlayerMovement : MonoBehaviour{
 
     //Variables globales del pinguino
     public PinguinoDefinicion pinguino;
+
+    public TextMeshProUGUI textoDebug;
+    public TextMeshProUGUI textoDebug1;
 
 
     //Asignar este script al objeto que tiene el Character controller
@@ -35,10 +41,10 @@ public class PlayerMovement : MonoBehaviour{
     Vector3 playerMovementVector;
     
     [SerializeField]
-    float gravity = - 9.81f; // - 3 Gravedad
+    float gravity = -6f; //- 9.81f; // - 3 Gravedad
 
     [SerializeField]
-    float jumpHeight = 50f; // 50 Altura minima para saltar un cubo
+    float jumpHeight =50f; // 50 Altura minima para saltar un cubo
 
     [SerializeField]
     float directionalJump = 3f; //3
@@ -48,11 +54,15 @@ public class PlayerMovement : MonoBehaviour{
     //Camara
     public Camera cam;//Asignar camara 
 
+    int totalSaltos = 0;
+    float maxY = 0;
+    float maxYPinguino = 0;
+
     void Start()    {
         controller = GetComponent<CharacterController>();       
         animatorController = malla_pinguino.GetComponent<Animator>(); 
         //Inicializando vector
-        // playerMovementVector = Vector3.zero;      
+         playerMovementVector = Vector3.zero;      
     }
 
     void Update()    {
@@ -79,24 +89,58 @@ public class PlayerMovement : MonoBehaviour{
             MyMouseFunction();       
         }
 
- 
+
+       
         //Gravedad
+       float alturaMaxima = 2;
+       if (jugadorController.transform.position.y>alturaMaxima) {
+           Vector3 nuevaPosicionLimiteSalto = new Vector3 (jugadorController.transform.position.x, alturaMaxima, jugadorController.transform.position.z);
+           jugadorController.transform.position = nuevaPosicionLimiteSalto;
+           playerMovementVector.y = gravity;  
+           Debug.Log("Salto demasiado");        
+        } else {
+           playerMovementVector.y += gravity;
+        }
   
-        playerMovementVector.y += gravity;// * Time.deltaTime;
+        //playerMovementVector.y += gravity;
+        
         controller.Move (playerMovementVector*Time.deltaTime);    
         
         //hacer que el pinguino siempre mire la camara
         Vector3 back = cam.transform.position;
         back.y = 0;
-        malla_pinguino.transform.rotation =  Quaternion.LookRotation(back);    
+        malla_pinguino.transform.rotation =  Quaternion.LookRotation(back);   
+        if (playerMovementVector.y>maxY)   {
+            maxY = playerMovementVector.y;
+        }
+
+        if (jugadorController.transform.position.y >=maxYPinguino) {
+            maxYPinguino = jugadorController.transform.position.y;
+        }
+
+
+        textoDebug1.text ="MaxYVector: "+maxY+ "\nMaxYPinguino: "+maxYPinguino + "\nVector: "+playerMovementVector; 
+
+        //Demora
+
+         int a  = 0;
+        for (int i = 0; i<=100000000; i++){
+           a = a^2; 
+        }
+
     }
 
 
 
-void Saltar() {
+public void Saltar() {
     pinguino.estaSaltando = true;
      animatorController.SetTrigger("Saltar");
-     playerMovementVector.y += jumpHeight; 
+     //playerMovementVector.y += jumpHeight;
+     playerMovementVector.y = jumpHeight;
+     totalSaltos++;
+     //Debug.Log("Saltando " + totalSaltos);
+      textoDebug.text = "Salto No: "+totalSaltos + " Vector: "+playerMovementVector;
+      maxY = 0;
 }
 
  void MyMouseFunction()    {

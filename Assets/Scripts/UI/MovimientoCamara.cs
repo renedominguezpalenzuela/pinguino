@@ -14,7 +14,7 @@ public class MovimientoCamara : MonoBehaviour
     public Camera cam;
     public Transform target;
     public float distanceToTarget = 16.5f;
-    public TextMeshProUGUI textoDebug;
+    
     
     private Vector3 previousPosition;
     private float rotationAroundXAxis = 0f;
@@ -30,7 +30,7 @@ public class MovimientoCamara : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             previousPosition = cam.ScreenToViewportPoint(Input.mousePosition);
-            textoDebug.text = "Iniciando movimiento de Camara SWIPE";
+           // textoDebug.text = "Iniciando movimiento de Camara SWIPE";
 
         }
         else if (Input.GetMouseButton(0))
@@ -47,7 +47,7 @@ public class MovimientoCamara : MonoBehaviour
 
            
              
-              textoDebug.text = "Angulo Camara "+newPosition;
+             // textoDebug.text = "Angulo Camara "+newPosition;
 
                           
               
