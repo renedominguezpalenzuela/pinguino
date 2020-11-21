@@ -7,15 +7,18 @@ using TMPro;
 
 
 //[RequireComponent(typeof(ARSessionOrigin))]
-public class PlayerMovement : MonoBehaviour{
+public class PlayerMovementOLD : MonoBehaviour{
+
 
     //Introducir una demora en cada frame que simula error en dispositivos lentos
     [SerializeField] private bool activarDemora = false;
-    private float AlturaMaximaRelativaPermitida = 1.0f;
-    private float AlturaMaximaAbsolutaPermitida = 0.0f;
 
     //Variables globales del pinguino
-    public PinguinoDefinicion pinguino_datos;
+    public PinguinoDefinicion pinguino;
+
+    public TextMeshProUGUI textoDebug;
+    public TextMeshProUGUI textoDebug1;
+
 
     //Asignar este script al objeto que tiene el Character controller
     CharacterController controller;
@@ -25,30 +28,25 @@ public class PlayerMovement : MonoBehaviour{
 
     public GameObject malla_pinguino; //Asignar la malla del pinguino
 
-    public TextMeshProUGUI textoDebug;
-    public TextMeshProUGUI textoDebug1;
-    public TextMeshProUGUI textoFrames;
-
     //Ground Check
-    
+    //public Transform groundCheck; //Asignar objeto creado en la base del player, por debajo de la capsula del Character controller
     bool isGrounded; //Variable para verificar si esta en el piso o no
-    public GameObject Pinguino_Controller; 
+    public GameObject jugadorController; 
 
-    public float groundDistance = 0.1f; //radio de la esfera para chequear piso si es muy chica, se mueve solo ejemplo 0.02
+    //public float groundDistance = 0.1f; //radio de la esfera para chequear piso si es muy chica, se mueve solo ejemplo 0.02
                                         // si es muy grande se queda atascado en el borde de los cubos ejemplo 0.2
-    public LayerMask groundMask; //Asignar layer del piso (previamente crear Layer y asignarle al piso)
-    public Transform groundCheck; //Asignar objeto creado en la base del player, por debajo de la capsula del Character controller
+    //public LayerMask groundMask; //Asignar layer del piso (previamente crear Layer y asignarle al piso)
     
+    //public GameObject isGroundedScriptObject; //Asignar el propio objeto, buscar en internet como referenciar al propio objeto
 
-   
 //Salto
     
     //Gravedad
     Vector3 playerMovementVector;
     
-     float gravity = - 9.81f; // - 3 Gravedad
-     float jumpHeight =2f; //NO USado 50 Altura minima para saltar un cubo
-     float directionalJump = 0.5f; //3
+    [SerializeField] float gravity = -6f; //- 9.81f; // - 3 Gravedad
+    [SerializeField] float jumpHeight =50f; // 50 Altura minima para saltar un cubo
+    [SerializeField] float directionalJump = 3f; //3
 
     int clickedAmount = 0; //Comprobar si simple o doble clic?
 
@@ -59,8 +57,6 @@ public class PlayerMovement : MonoBehaviour{
     float maxY = 0;
     float maxYPinguino = 0;
 
-    int frame = 0;
-
     void Start()    {
         controller = GetComponent<CharacterController>();       
         animatorController = malla_pinguino.GetComponent<Animator>(); 
@@ -69,20 +65,20 @@ public class PlayerMovement : MonoBehaviour{
     }
 
     void Update()    {
-
-        frame++;
         //Chequeando si esta groundded (Crear Esfera centrada en objeto groundCheck y de radio groundDistance
-       isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
        // isGrounded =  isGroundedScriptObject.GetComponent<IsGroundedControlador>().isGrounded;
-       //isGrounded = controller.isGrounded; 
-       pinguino_datos.isGrounded = isGrounded;
+       isGrounded = controller.isGrounded; 
+       pinguino.isGrounded = isGrounded;
 
         if (isGrounded && playerMovementVector.y < 0) {
-             playerMovementVector = Vector3.zero;          
+           // playerMovementVector.y = 0f; //Sobra
+            playerMovementVector = Vector3.zero;          
         }
      
         //Salto con barra espaciadora (Eliminar)
-        if (Input.GetButtonDown("Jump") && isGrounded) { 
+        if (Input.GetButtonDown("Jump") && isGrounded) {
+  
              Saltar();      
         }
 
@@ -91,52 +87,40 @@ public class PlayerMovement : MonoBehaviour{
         if (Input.GetMouseButtonDown(0))  {
             clickedAmount += 1;
             MyMouseFunction();  
-            //Debug.Log("Clic en pantalla");
+            Debug.Log("Clic en pantalla");
         }
 
 
-        if (Pinguino_Controller.transform.position.y>AlturaMaximaAbsolutaPermitida ) { 
-            pinguino_datos.estaSubiendo = false;
-        }   
-         // playerMovementVector = Vector3.Normalize(playerMovementVector);   
-        if (pinguino_datos.estaSubiendo) {
-           // Vector3 incremento = new Vector3(0,1,0);
-           // Pinguino_Controller.transform.Translate(incremento);   
-                                      
-           Pinguino_Controller.transform.Translate(playerMovementVector);
-        } else {        
+       
+        //Gravedad
+       float alturaMaxima = 2;
+       if (jugadorController.transform.position.y>alturaMaxima) {
+           Vector3 nuevaPosicionLimiteSalto = new Vector3 (jugadorController.transform.position.x, alturaMaxima, jugadorController.transform.position.z);
+           jugadorController.transform.position = nuevaPosicionLimiteSalto;
+           playerMovementVector.y = gravity;  
+           Debug.Log("Salto demasiado");        
+        } else {
            playerMovementVector.y += gravity;
-           controller.Move (playerMovementVector*Time.deltaTime);    
         }
-
-       // controller.transform.Translate(playerMovementVector*Time.deltaTime);
+  
+        //playerMovementVector.y += gravity;
         
-        
+        controller.Move (playerMovementVector*Time.deltaTime);    
         
         //hacer que el pinguino siempre mire la camara
         Vector3 back = cam.transform.position;
         back.y = 0;
         malla_pinguino.transform.rotation =  Quaternion.LookRotation(back);   
-
-        //Mostrar Altura maxima
         if (playerMovementVector.y>maxY)   {
             maxY = playerMovementVector.y;
         }
 
-        //Mostrar Altura maxima
-        if (Pinguino_Controller.transform.position.y >=maxYPinguino) {
-            maxYPinguino = Pinguino_Controller.transform.position.y;
+        if (jugadorController.transform.position.y >=maxYPinguino) {
+            maxYPinguino = jugadorController.transform.position.y;
         }
 
 
-        textoDebug1.text ="MaxY Vector: "+maxY+ 
-                          "\nMaxY Pinguino: "+ maxYPinguino + 
-                          "\nVector: "+playerMovementVector+
-                          "\nPos Y Pinguino: "+Pinguino_Controller.transform.position.y+
-                          "\n PosY Max Permitida: "+AlturaMaximaAbsolutaPermitida; 
-
-
-        textoFrames.text = "Frame: "+frame + " Saltando "+pinguino_datos.estaSubiendo;
+        textoDebug1.text ="MaxYVector: "+maxY+ "\nMaxYPinguino: "+maxYPinguino + "\nVector: "+playerMovementVector; 
 
         //Demora
         if (activarDemora) {
@@ -151,18 +135,10 @@ public class PlayerMovement : MonoBehaviour{
 
 
 public void Saltar() {
-    //Debug.Log("Is Grounded "+isGrounded);
-    if (!isGrounded) return;
-    pinguino_datos.estaSaltando = true;
-    pinguino_datos.estaSubiendo = true;
+    pinguino.estaSaltando = true;
      animatorController.SetTrigger("Saltar");
+     //playerMovementVector.y += jumpHeight;
      playerMovementVector.y = jumpHeight;
-    // playerMovementVector = Vector3.Normalize(playerMovementVector);
-  
-
-
-     AlturaMaximaAbsolutaPermitida = Pinguino_Controller.transform.position.y+AlturaMaximaRelativaPermitida; 
- 
      totalSaltos++;
      //Debug.Log("Saltando " + totalSaltos);
       textoDebug.text = "Salto No: "+totalSaltos + " Vector: "+playerMovementVector;
@@ -201,7 +177,7 @@ public void Saltar() {
 
                         if (isGrounded) {Saltar();}  
                         
-                    }  else if (DatosObjeto.name == "Pinguino_Controllador") { //si hace clic en el pinguino
+                    }  else if (DatosObjeto.name == "Pinguino_Controllador") {
                          //Saltar en el lugar
                          if (isGrounded) {Saltar();}                        
                     }  else  { //poner condicion que sea un cubo
@@ -215,16 +191,14 @@ public void Saltar() {
                         playerMovementVector.x = newPos.x- transform.position.x ;
                         playerMovementVector.z = newPos.z - transform.position.z ;
                   
-                       playerMovementVector = playerMovementVector * directionalJump;
+                        playerMovementVector = playerMovementVector * directionalJump;
 
                         //Saltar hacia el cubo
                        // Debug.DrawLine(newPos, transform.position, Color.blue, 3f);
 
-                       if (isGrounded) {Saltar();}                        
+                        if (isGrounded) {Saltar();}                        
                     }   
 
-                    
-                   
                     // Debug.Log("Clic on " + DatosObjeto.name);        
                     // Debug.Log("Clic on Pos " + newPos);
                 }

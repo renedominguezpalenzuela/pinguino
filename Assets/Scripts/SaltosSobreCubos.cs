@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//------------------------------------------------------------------------------------------
+//  Script asignado a cubos prefabs, controlan los saltos recibidos del pinguino
+//------------------------------------------------------------------------------------------
 public class SaltosSobreCubos : MonoBehaviour {
 
     //Variables globales del pinguino
@@ -18,13 +22,15 @@ public class SaltosSobreCubos : MonoBehaviour {
     }
 
 void OnTriggerEnter(Collider other) {
-       // Debug.Log("ColisionCCC "+other.gameObject.name+" "+other.gameObject.tag);
+       // Debug.Log("Colision "+other.gameObject.name+" "+other.gameObject.tag);
        //
-           // Debug.Log("ColisionZZZ "+other.gameObject.name + " "+other.gameObject.tag); 
+           //
                 if  (other.gameObject.CompareTag("CUBO")) {
+                    
                     if (pinguino.estaSaltando) {
+                        Debug.Log("ColisionZZZ "+other.gameObject.name + " "+other.gameObject.tag); 
                         //Debug.Log("HERE");
-                        other.gameObject.GetComponent<CuboVida>().saltoRecibido(2);
+                        other.gameObject.GetComponent<CuboVida>().saltoRecibido(pinguino.potenciaSalto);
                         pinguino.estaSaltando = false;         
                     }
                 }

@@ -13,7 +13,7 @@ public class MovimientoCamara : MonoBehaviour
     
 
     [SerializeField] private float MaxAnguloHaciaArriba = 30.0f;
-    [SerializeField] private float MaxAnguloHaciaAbajo = 2.0f;
+    [SerializeField] private float MaxAnguloHaciaAbajo = 5.0f;
 
     
     private float xAxisClamp;
@@ -46,13 +46,13 @@ public class MovimientoCamara : MonoBehaviour
                 xAxisClamp = MaxAnguloHaciaArriba;
                 rotationAroundXAxis = 0.0f; //no rotar llego al limite             
                 ClampXAxisRotationToValue(MaxAnguloHaciaArriba); //Valores absolutos
-                Debug.Log("Hacia Arriba " + xAxisClamp+" "+rotationAroundXAxis);
+               // Debug.Log("Hacia Arriba " + xAxisClamp+" "+rotationAroundXAxis);
             }
             else if (xAxisClamp <MaxAnguloHaciaAbajo)  {
                 xAxisClamp = MaxAnguloHaciaAbajo;
                 rotationAroundXAxis = 0.0f; //no rotar  llego al limite  
                 ClampXAxisRotationToValue(MaxAnguloHaciaAbajo);      
-                Debug.Log("Hacia Abajo " + xAxisClamp+" "+rotationAroundXAxis);
+              //  Debug.Log("Hacia Abajo " + xAxisClamp+" "+rotationAroundXAxis);
             }
             
 
