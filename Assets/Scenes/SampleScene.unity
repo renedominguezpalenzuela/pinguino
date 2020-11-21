@@ -1243,8 +1243,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.109516956, y: -0.06325335, z: 0.0069835573, w: 0.9919458}
-  m_LocalPosition: {x: 2.0453095, y: 3.4405282, z: -15.952167}
+  m_LocalRotation: {x: -0.01741703, y: 0.06362808, z: -0.0011106282, w: -0.9978211}
+  m_LocalPosition: {x: 2.0945132, y: 0.4168417, z: -16.336388}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1549,6 +1549,8 @@ MonoBehaviour:
   cam: {fileID: 963194227}
   target: {fileID: 1863933407}
   distanceToTarget: 16.5
+  MaxAnguloHaciaArriba: 30
+  MaxAnguloHaciaAbajo: 2
 --- !u!1 &1131725350
 GameObject:
   m_ObjectHideFlags: 0
