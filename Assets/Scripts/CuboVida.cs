@@ -30,7 +30,7 @@ public class CuboVida : MonoBehaviour
     public void saltoRecibido(int potenciaDeSalto =1 ) {
         
         vidaRestante-=potenciaDeSalto;
-        Debug.Log("Salto recibido. Vida del Cubo "+vidaRestante);
+       // Debug.Log("Salto recibido. Vida del Cubo "+vidaRestante);
         
         if (vidaRestante<=0) {
            // Debug.Log("Explotando");
@@ -39,8 +39,8 @@ public class CuboVida : MonoBehaviour
 
             //Destruir el objeto
 
-
-            //Destroy(gameObject);
+            //Crear un evento de tiempo  
+           // Destroy(gameObject);
         }
     }
 

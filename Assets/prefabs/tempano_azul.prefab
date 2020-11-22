@@ -416,7 +416,6 @@ GameObject:
   - component: {fileID: 3211959119866025795}
   - component: {fileID: 3211959119866025797}
   - component: {fileID: 3211959119866025796}
-  - component: {fileID: 5038608342138390404}
   m_Layer: 8
   m_Name: tempano_azul
   m_TagString: CUBO
@@ -507,20 +506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97fc1463d353cbb4cb5f6039eca68ac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vidaRestante: 20
---- !u!114 &5038608342138390404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2328996647842630996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15ae8218b8365d04aa46a6d8c350e14c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pinguino: {fileID: 11400000, guid: 46f216c11f3f99c46a8c7fc955c055a7, type: 2}
+  vidaRestante: 10
 --- !u!1 &2394106347215584166
 GameObject:
   m_ObjectHideFlags: 0

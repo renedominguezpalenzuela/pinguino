@@ -22,18 +22,21 @@ public class SaltosSobreCubos : MonoBehaviour {
     }
 
 void OnTriggerEnter(Collider other) {
-       // Debug.Log("Colision "+other.gameObject.name+" "+other.gameObject.tag);
+        Debug.Log("Colision "+other.gameObject.name+" "+other.gameObject.tag);
        //
            //
                 if  (other.gameObject.CompareTag("CUBO")) {
                     
                     if (pinguino.estaSaltando) {
+                         
                         Debug.Log("ColisionZZZ "+other.gameObject.name + " "+other.gameObject.tag); 
                         //Debug.Log("HERE");
-                        other.gameObject.GetComponent<CuboVida>().saltoRecibido(pinguino.potenciaSalto);
-                        pinguino.estaSaltando = false;         
+                        other.gameObject.GetComponent<CuboVida>().saltoRecibido(pinguino.potenciaSalto);                        
                     }
                 }
+                pinguino.estaSaltando = false; 
+                pinguino.estaSubiendo = false; 
+                       
                     
          //   }    
        // Destroy(other.gameObject);

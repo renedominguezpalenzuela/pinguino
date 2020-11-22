@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: Pinguino
   m_EditorClassIdentifier: 
   potenciaSalto: 1
-  isGrounded: 0
+  isGrounded: 1
+  estaSaltando: 1
+  estaSubiendo: 0
+  AlturaSalto: 1
